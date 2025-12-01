@@ -1,5 +1,5 @@
 {
-  "name": "cymircode-page",  // <-- 已改为全小写
+  "name": "meirishengyan", // <-- 采用部署系统建议的名称
   "compatibility_date": "2025-12-01", 
   "assets": {
     "directory": "." 
