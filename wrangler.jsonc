@@ -1,5 +1,5 @@
 {
-  "name": "CyMIRcode-page", 
+  "name": "cymircode-page",  // <-- 已改为全小写
   "compatibility_date": "2025-12-01", 
   "assets": {
     "directory": "." 
