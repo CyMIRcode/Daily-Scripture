@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>每日圣言</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            min-height: 100vh;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(255, 255, 255, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 80% 50%, rgba(255, 255, 255, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.02) 0%, transparent 70%),
+                linear-gradient(180deg, 
+                    #0a0e27 0%, 
+                    #1a1f3a 20%, 
+                    #2d3561 50%, 
+                    #1a1f3a 80%, 
+                    #0a0e27 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+            color: #ffffff;
+        }
+
+        /* 神圣光束效果 */
+        .divine-rays {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                linear-gradient(45deg, transparent 48%, rgba(255, 255, 255, 0.03) 50%, transparent 52%),
+                linear-gradient(-45deg, transparent 48%, rgba(255, 255, 255, 0.03) 50%, transparent 52%),
+                linear-gradient(90deg, transparent 48%, rgba(255, 255, 255, 0.02) 50%, transparent 52%),
+                linear-gradient(0deg, transparent 48%, rgba(255, 255, 255, 0.02) 50%, transparent 52%);
+            animation: divineRotate 60s linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes divineRotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* 神圣光环 */
+        .halo {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, 
+                rgba(255, 255, 255, 0.1) 0%, 
+                rgba(255, 255, 255, 0.05) 30%, 
+                transparent 70%);
+            border-radius: 50%;
+            animation: haloPulse 8s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        @keyframes haloPulse {
+            0%, 100% { 
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 0.3;
+            }
+            50% { 
+                transform: translate(-50%, -50%) scale(1.1);
+                opacity: 0.6;
+            }
+        }
+
+        /* 主要内容容器 */
+        .content {
+            text-align: center;
+            z-index: 10;
+            padding: 40px 20px;
+            max-width: 900px;
+            width: 100%;
+        }
+
+        /* 日期显示 */
+        .date {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.5);
+            margin-bottom: 40px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            font-weight: 300;
+        }
+
+        /* 十字架符号 */
+        .cross-symbol {
+            font-size: 80px;
+            color: rgba(255, 255, 255, 0.15);
+            line-height: 1;
+            margin-bottom: 30px;
+            position: relative;
+            display: inline-block;
+        }
+
+        .cross-symbol::before {
+            content: '✚';
+            display: block;
+            animation: crossGlow 4s ease-in-out infinite alternate;
+        }
+
+        @keyframes crossGlow {
+            from { 
+                text-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+                transform: scale(1);
+            }
+            to { 
+                text-shadow: 0 0 20px rgba(255, 255, 255, 0.4);
+                transform: scale(1.05);
+            }
+        }
+
+        /* 格言文本 */
+        .quote {
+            font-size: 32px;
+            line-height: 1.8;
+            margin-bottom: 30px;
+            font-weight: 300;
+            letter-spacing: 2px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+            min-height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: textGlow 4s ease-in-out infinite alternate;
+        }
+
+        @keyframes textGlow {
+            from { 
+                text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+            }
+            to { 
+                text-shadow: 0 2px 20px rgba(255, 255, 255, 0.3);
+            }
+        }
+
+        /* 作者 */
+        .author {
+            font-size: 18px;
+            color: rgba(255, 255, 255, 0.6);
+            margin-bottom: 50px;
+            font-style: italic;
+            letter-spacing: 1px;
+        }
+
+        /* 分隔线 */
+        .divider {
+            width: 100px;
+            height: 1px;
+            background: linear-gradient(90deg, 
+                transparent, 
+                rgba(255, 255, 255, 0.3) 50%, 
+                transparent);
+            margin: 0 auto 50px;
+        }
+
+        /* 刷新按钮 */
+        .refresh-btn {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: rgba(255, 255, 255, 0.7);
+            padding: 12px 40px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 14px;
+            letter-spacing: 2px;
+            transition: all 0.4s ease;
+            font-family: inherit;
+            text-transform: uppercase;
+        }
+
+        .refresh-btn:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.4);
+            color: rgba(255, 255, 255, 0.9);
+            transform: translateY(-2px);
+        }
+
+        /* 底部文字 */
+        .footer {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 12px;
+            letter-spacing: 2px;
+        }
+
+        /* 神圣粒子 */
+        .divine-particle {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: floatUp 20s infinite linear;
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(100vh) translateX(0) scale(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+                transform: translateY(80vh) translateX(10px) scale(1);
+            }
+            90% {
+                opacity: 1;
+                transform: translateY(10vh) translateX(-10px) scale(1);
+            }
+            100% {
+                transform: translateY(-10vh) translateX(0) scale(0);
+                opacity: 0;
+            }
+        }
+
+        /* 加载状态 */
+        .loading {
+            color: rgba(255, 255, 255, 0.4);
+            font-style: italic;
+        }
+
+        /* 错误状态 */
+        .error {
+            color: rgba(255, 200, 200, 0.8);
+            font-style: italic;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .quote {
+                font-size: 24px;
+                padding: 0 20px;
+            }
+            
+            .cross-symbol {
+                font-size: 60px;
+            }
+            
+            .author {
+                font-size: 16px;
+            }
+            
+            .halo {
+                width: 400px;
+                height: 400px;
+            }
+        }
+
+        /* 淡入动画 */
+        .fade-in {
+            animation: fadeIn 2s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { 
+                opacity: 0; 
+                transform: translateY(20px);
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 神圣背景效果 -->
+    <div class="divine-rays"></div>
+    <div class="halo"></div>
+    
+    <!-- 主要内容 -->
+    <div class="content">
+        <div class="date" id="currentDate"></div>
+        <div class="cross-symbol"></div>
+        <div class="quote" id="quote">
+            <span class="loading">正在加载神圣智慧...</span>
+        </div>
+        <div class="author" id="author"></div>
+        <div class="divider"></div>
+        <button class="refresh-btn" onclick="displayRandomQuote()">新的智慧</button>
+    </div>
+
+    <div class="footer">每日圣言 · 圣神指引</div>
+
+    <!-- 引入外部格言数据 -->
+    <script src="quotes.js"></script>
+    
+    <script>
+        // 检查quotes是否成功加载
+        function checkQuotesLoaded() {
+            if (typeof quotes === 'undefined') {
+                console.error('无法加载quotes.js文件');
+                document.getElementById('quote').innerHTML = '<span class="error">格言文件加载失败</span>';
+                return false;
+            }
+            if (!Array.isArray(quotes) || quotes.length === 0) {
+                console.error('quotes数据格式错误或为空');
+                document.getElementById('quote').innerHTML = '<span class="error">格言数据为空</span>';
+                return false;
+            }
+            return true;
+        }
+
+        // 显示随机格言
+        function displayRandomQuote() {
+            if (!checkQuotesLoaded()) {
+                return;
+            }
+            
+            const randomIndex = Math.floor(Math.random() * quotes.length);
+            const quote = quotes[randomIndex];
+            
+            const quoteElement = document.getElementById('quote');
+            const authorElement = document.getElementById('author');
+            
+            // 添加淡出效果
+            quoteElement.style.opacity = '0';
+            authorElement.style.opacity = '0';
+            
+            setTimeout(() => {
+                quoteElement.textContent = quote.text;
+                authorElement.textContent = `—— ${quote.author}`;
+                
+                // 添加淡入效果
+                quoteElement.style.opacity = '1';
+                authorElement.style.opacity = '1';
+            }, 300);
+        }
+
+        // 显示当前日期
+        function displayCurrentDate() {
+            const now = new Date();
+            const options = { 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric',
+                weekday: 'long'
+            };
+            const dateStr = now.toLocaleDateString('zh-CN', options);
+            document.getElementById('currentDate').textContent = dateStr;
+        }
+
+        // 创建神圣粒子效果
+        function createDivineParticles() {
+            const particleCount = 15;
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'divine-particle';
+                particle.style.width = Math.random() * 3 + 1 + 'px';
+                particle.style.height = particle.style.width;
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 20 + 's';
+                particle.style.animationDuration = (Math.random() * 10 + 20) + 's';
+                document.body.appendChild(particle);
+            }
+        }
+
+        // 页面加载时初始化
+        window.onload = function() {
+            displayCurrentDate();
+            
+            // 等待一小段时间确保quotes.js完全加载
+            setTimeout(() => {
+                displayRandomQuote();
+            }, 100);
+            
+            createDivineParticles();
+        };
+
+        // 每分钟更新日期
+        setInterval(displayCurrentDate, 60000);
+
+        // 错误处理
+        window.addEventListener('error', function(event) {
+            console.error('页面错误:', event.error);
+        });
+    </script>
+</body>
+</html>
